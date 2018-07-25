@@ -2,6 +2,7 @@
 """Abstract Base Class for Basis Function and some common implementations."""
 
 import abc
+import functools
 
 import numpy as np
 
@@ -376,7 +377,7 @@ class RadialBasisFunction(BasisFunction):
         if len(means) == 0:
             raise ValueError('You must specify at least one mean')
 
-        if reduce(RadialBasisFunction.__check_mean_size, means) is None:
+        if functools.reduce(RadialBasisFunction.__check_mean_size, means) is None:
             raise ValueError('All mean vectors must have the same dimensions')
 
         self.means = means

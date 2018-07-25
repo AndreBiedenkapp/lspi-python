@@ -9,7 +9,7 @@ from random import randint, random
 
 import numpy as np
 
-from sample import Sample
+from lspi.sample import Sample
 
 
 class Domain(object):
