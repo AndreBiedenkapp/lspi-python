@@ -639,8 +639,10 @@ class ExactBasis(BasisFunction):
 
 class BattitiBasis(BasisFunction):
 
-    def __init__(self, num_actions=20):
+    def __init__(self, num_actions=20, delta_index=0, ham_index=1):
         self.__num_actions = BasisFunction._validate_num_actions(num_actions)
+        self.__delta_index = delta_index
+        self.__ham_index = ham_index
 
     def size(self):
         return 6 * self.__num_actions
@@ -656,8 +658,8 @@ class BattitiBasis(BasisFunction):
         if action >= self.num_actions:
             raise IndexError('action must be < num_actions')
 
-        normalizedDelta = state[0]
-        normalizedHam = state[1]
+        normalizedDelta = state[self.__delta_index]
+        normalizedHam = state[self.__ham_index]
 
         phi = np.zeros(6 * self.__num_actions)
         phi[action * 6 : (action + 1) * 6] = [
