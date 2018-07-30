@@ -635,3 +635,57 @@ class ExactBasis(BasisFunction):
         if value < 1:
             raise ValueError('num_actions must be at least 1.')
         self.__num_actions = value
+
+
+class BattitiBasis(BasisFunction):
+
+    def __init__(self, num_actions=20, delta_index=0, ham_index=1):
+        self.__num_actions = BasisFunction._validate_num_actions(num_actions)
+        self.__delta_index = delta_index
+        self.__ham_index = ham_index
+
+    def size(self):
+        return 6 * self.__num_actions
+
+    def evaluate(self, state, action):
+        """
+        Assuming state = [normalizedDelta, normalizedHam]
+        Assuming actions are in [0, 19]
+        """
+
+        if action < 0:
+            raise IndexError('action index must be >= 0')
+        if action >= self.num_actions:
+            raise IndexError('action must be < num_actions')
+
+        normalizedDelta = state[self.__delta_index]
+        normalizedHam = state[self.__ham_index]
+
+        phi = np.zeros(6 * self.__num_actions)
+        phi[action * 6 : (action + 1) * 6] = [
+            1.,
+            normalizedDelta,
+            normalizedHam,
+            normalizedHam * normalizedDelta,
+            normalizedDelta * normalizedDelta,
+            normalizedHam * normalizedHam]
+
+        return phi
+        """
+        return np.array([1.,
+            normalizedDelta,
+            normalizedHam,
+            normalizedHam * normalizedDelta,
+            normalizedDelta * normalizedDelta,
+            normalizedHam * normalizedHam])
+        """
+    @property
+    def num_actions(self):
+        """Return number of possible actions."""
+        return self.__num_actions
+
+    @num_actions.setter
+    def num_actions(self, value=20):
+        if value < 1:
+            raise ValueError('num_actions must be at least 1.')
+        self.__num_actions = value
